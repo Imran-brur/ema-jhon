@@ -8,20 +8,35 @@ import { Link } from 'react-router-dom';
 
 
 const Shop = () => {
-    const first10 = fakeData.slice(0, 10)
-    const [products, setProducts] = useState(first10);
+    // const first10 = fakeData.slice(0, 10)
+    const [products, setProducts] = useState([]);
     const [cart, setCart] = useState([]);
+    const [search, setSearch] = useState('');
+
+    useEffect(() =>{
+        fetch('http://localhost:5000/products?search='+search)
+        .then(res => res.json())
+        .then(data => setProducts(data))
+    }, [search])
 
     useEffect(()=>{
         const savedCart = getDatabaseCart();
-        const productKey = Object.keys(savedCart);
-        const previousCart = productKey.map(existingKey => {
-            const product = fakeData.find(pdt => pdt.key === existingKey);
-            product.quantity = savedCart[existingKey];
-            return product;
+        const productKeys = Object.keys(savedCart);
+        fetch('https://secure-citadel-89769.herokuapp.com/productsByKeys', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(productKeys)
         })
-        setCart(previousCart);
+        .then(res => res.json())
+        .then(data => setCart(data))
+
     }, [])
+
+    const handleSearch = event => {
+        setSearch(event.target.value);
+    }
    
     const handleAddProduct = (product) =>{
         const toBeAdded = product.key;
@@ -44,7 +59,7 @@ const Shop = () => {
     return (
         <div className="twin-container">
             <div className="product-container">
-                
+                <input type="text" onBlur={handleSearch} className="product-secavh" placeholder='Search'/>
                     {
                         products.map(pdt => <Product
                             key={pdt.key}

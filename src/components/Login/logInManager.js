@@ -1,6 +1,6 @@
 import * as firebase from "firebase/app";
 import "firebase/auth";
-import firebaseConfig from './firebaseConfig.js';
+import firebaseConfig from './firebaseConfig'
 
 export const initializeLoginFramework = () =>{
     if(firebase.apps.length === 0){
@@ -13,6 +13,7 @@ export const handleGoogleSignIn = () =>{
     return firebase.auth().signInWithPopup(provider)
     .then(res => {
       const {displayName, photoURL, email} = res.user;
+      console.log(res.user);
       const signedInUser = {
         isSignedIn: true,
         name: displayName,
@@ -27,6 +28,8 @@ export const handleGoogleSignIn = () =>{
       console.log(error.message);
     })
   }
+
+  
 
   
   export const handleFbLogin = () => {
@@ -73,6 +76,7 @@ export const handleGoogleSignIn = () =>{
     return firebase.auth().createUserWithEmailAndPassword(email, password)
     .then(res =>{
       const newUserInfo = res.user;
+      console.log(res.user);
       newUserInfo.error = '';
       newUserInfo.success = true;
      updateUserName(name);

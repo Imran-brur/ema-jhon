@@ -2,11 +2,10 @@ import React from 'react';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import { getDatabaseCart, removeFromDatabaseCart, processOrder } from '../../utilities/databaseManager';
-import fakeData from '../../fakeData';
 import ReviewItem from './ReviewItem/ReviewItem';
-import Cart from '../Cart/Cart';
 import happyImage from '../../images/giphy.gif'
 import { useHistory } from 'react-router-dom';
+import Cart from '../Cart/Cart';
 
 const Review = () => {
     const [cart, setCart] = useState([]);
@@ -26,12 +25,17 @@ const Review = () => {
     useEffect(()=>{
         const savedCart = getDatabaseCart();
         const productKeys = Object.keys(savedCart);
-        const cartProducts = productKeys.map(key => {
-            const product = fakeData.find(pdt => pdt.key === key);
-            product.quantity = savedCart[key];
-            return product;
-        });
-        setCart(cartProducts); 
+
+        fetch('https://secure-citadel-89769.herokuapp.com/productsByKeys', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(productKeys)
+        })
+        .then(res => res.json())
+        .then(data => setCart(data))
+
     }, []);
 
     let thankyou;
@@ -52,9 +56,9 @@ const Review = () => {
            { thankyou }
            </div>
            <div className="cart-container">
-               <Cart cart={cart}>
-                   <button onClick={handleProceedCheckout} className="btn btn-success">Proceed  Checkout</button>
-               </Cart>
+            <Cart cart={cart}>
+               <button onClick={handleProceedCheckout} className="btn btn-success">Proceed  Checkout</button>
+            </Cart>
            </div>
         </div>
     );

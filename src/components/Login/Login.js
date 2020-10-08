@@ -11,7 +11,6 @@ function Login() {
     email: '',
     password: '',
     photo: '',
-    error: ''
 })
 
     initializeLoginFramework();
@@ -92,7 +91,7 @@ function Login() {
   return (
     <div style={{textAlign: 'center'}}>
       {
-        user.isSignedIn ?<button onClick={signOut}>Sign out</button> :
+        user.isSignedIn ? <button onClick={signOut}>Sign out</button> :
         <button onClick={googleSignIn}>Sign In</button>
       }   
       <br/>
@@ -115,7 +114,7 @@ function Login() {
      <br/>
      <input type="password" name="password" onChange={handleBlur} placeholder="Your password" required id=""/> 
      <br/>
-     <input type="submit" value="submit"/>
+     <input type="submit" value={newUser ? 'Sign up' : 'Sign in'}/>
     </form>
     <p style= {{color: 'red'}}>{user.error}</p>
     {

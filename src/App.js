@@ -33,7 +33,7 @@ function App() {
           <Route path="/review">
           <Review></Review>
           </Route>
-          <PrivetRoute path="/inventory">
+          <PrivetRoute path="/orders">
           <Inventory></Inventory>
           </PrivetRoute>
           <Route path="/login">
